@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/atte/library-api/library-api.csproj": {}
+    "/home/atte/library-api/library-api.tests/library-api.tests.csproj": {}
   },
   "projects": {
-    "/home/atte/library-api/library-api.csproj": {
+    "/home/atte/library-api/library-api.tests/library-api.tests.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/atte/library-api/library-api.csproj",
-        "projectName": "library-api",
-        "projectPath": "/home/atte/library-api/library-api.csproj",
+        "projectUniqueName": "/home/atte/library-api/library-api.tests/library-api.tests.csproj",
+        "projectName": "library-api.tests",
+        "projectPath": "/home/atte/library-api/library-api.tests/library-api.tests.csproj",
         "packagesPath": "/home/atte/.nuget/packages/",
-        "outputPath": "/home/atte/library-api/obj/",
+        "outputPath": "/home/atte/library-api/library-api.tests/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/atte/.nuget/NuGet/NuGet.Config"
@@ -38,23 +38,25 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
-            "Microsoft.AspNetCore.OpenApi": {
+            "Microsoft.NET.Test.Sdk": {
               "target": "Package",
-              "version": "[8.0.3, )"
+              "version": "[17.6.0, )"
             },
-            "Microsoft.EntityFrameworkCore.Design": {
+            "coverlet.collector": {
               "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
               "suppressParent": "All",
               "target": "Package",
-              "version": "[8.0.4, )"
+              "version": "[6.0.0, )"
             },
-            "Microsoft.EntityFrameworkCore.Sqlite": {
+            "xunit": {
               "target": "Package",
-              "version": "[8.0.4, )"
+              "version": "[2.4.2, )"
             },
-            "Swashbuckle.AspNetCore": {
+            "xunit.runner.visualstudio": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
               "target": "Package",
-              "version": "[6.4.0, )"
+              "version": "[2.4.5, )"
             }
           },
           "imports": [
@@ -69,9 +71,6 @@
           "assetTargetFallback": true,
           "warn": true,
           "frameworkReferences": {
-            "Microsoft.AspNetCore.App": {
-              "privateAssets": "none"
-            },
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
