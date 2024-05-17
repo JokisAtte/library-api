@@ -1,4 +1,5 @@
 using Xunit;
+using Microsoft.AspNetCore.Mvc;
 using LibraryApi.Controllers;
 using LibraryApi.Services;
 
@@ -6,8 +7,8 @@ using LibraryApi.Services;
 namespace LibraryApi.tests;
 public class BooksTest : IDisposable
 {
-    private readonly BooksService _service;
-    private readonly BooksController _controller;
+    private BooksService _service;
+    private BooksController _controller;
 
     public BooksTest()
     {
@@ -20,11 +21,17 @@ public class BooksTest : IDisposable
     {
         _service = null;
         _controller = null;
+
     }
 
     [Fact]
     public void Test_GetBooks_returnsBooks()
     {
-
+        var result = _controller.GetBooks();
+        Assert.NotNull(result);
+        Assert.IsType<OkObjectResult>(result);
+        var okResult = result as OkObjectResult;
+        Assert.NotNull(okResult);
+        Assert.IsType<List<Book>>(okResult.Value);
     }
 }

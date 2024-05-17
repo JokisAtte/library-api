@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using LibraryApi.Services;
 
 namespace LibraryApi.Controllers
 {
@@ -6,9 +7,11 @@ namespace LibraryApi.Controllers
     [Route("[controller]")]
     public class BooksController : ControllerBase
     {
-        public BooksController()
+        private BooksService _service;
+
+        public BooksController(BooksService service)
         {
-            //_service = service;
+            _service = service;
         }
 
         // GET: api/Books
