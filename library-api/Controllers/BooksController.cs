@@ -16,8 +16,9 @@ namespace LibraryApi.Controllers
 
         // GET: api/Books
         [HttpGet]
-        public IActionResult GetBooks()
+        public string GetBooks()
         {
+
             return Ok();
         }
 

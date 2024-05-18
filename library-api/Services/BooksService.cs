@@ -1,50 +1,49 @@
 using System.Collections.Generic;
+using LibraryApi.Data;
 
 namespace LibraryApi.Services
 {
     public class BooksService
     {
         private List<Book> _books;
+        private LibraryDbContext _context;
 
         public BooksService()
         {
-            _books = new List<Book>();
+            _context = new LibraryDbContext();
         }
 
         public List<Book> GetAllBooks()
         {
-            return _books;
+            // TODO: Implement the logic to retrieve all books from the database
+            throw new NotImplementedException();
         }
 
         public Book GetBookById(int id)
         {
-            return _books.Find(book => book.Id == id);
+            throw new NotImplementedException();
+
         }
 
         public void AddBook(Book book)
         {
-            _books.Add(book);
+            throw new NotImplementedException();
+
         }
 
         public void UpdateBook(int id, Book updatedBook)
         {
-            Book book = _books.Find(b => b.Id == id);
-            if (book != null)
-            {
-                book.Title = updatedBook.Title;
-                book.Author = updatedBook.Author;
-                // Update other properties as needed
-            }
+            throw new NotImplementedException();
+
         }
 
         public void DeleteBook(int id)
         {
-            Book book = _books.Find(b => b.Id == id);
-            if (book != null)
-            {
-                _books.Remove(book);
-            }
+            throw new NotImplementedException();
+
+
         }
+
     }
 
     public class Book
