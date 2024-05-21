@@ -11,15 +11,14 @@ namespace LibraryApi.Controllers
 
         public BooksController(BooksService service)
         {
-            _service = service;
+            _service = new BooksService();
         }
 
         // GET: api/Books
         [HttpGet]
-        public string GetBooks()
+        public IActionResult GetBooks()
         {
-
-            return Ok();
+            return Ok(_service.GetAllBooks());
         }
 
         // GET: api/Books/{id}

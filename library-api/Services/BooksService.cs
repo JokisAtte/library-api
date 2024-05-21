@@ -15,20 +15,26 @@ namespace LibraryApi.Services
 
         public List<Book> GetAllBooks()
         {
-            // TODO: Implement the logic to retrieve all books from the database
-            throw new NotImplementedException();
+            try
+            {
+                return _context.Books.ToList();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
         }
 
         public Book GetBookById(int id)
         {
             throw new NotImplementedException();
-
         }
 
         public void AddBook(Book book)
         {
-            throw new NotImplementedException();
-
+            _context.Books.Add(book);
+            _context.SaveChanges();
         }
 
         public void UpdateBook(int id, Book updatedBook)
@@ -40,17 +46,7 @@ namespace LibraryApi.Services
         public void DeleteBook(int id)
         {
             throw new NotImplementedException();
-
-
         }
 
-    }
-
-    public class Book
-    {
-        public int Id { get; set; }
-        public string Title { get; set; }
-        public string Author { get; set; }
-        // Add other properties as needed
     }
 }
