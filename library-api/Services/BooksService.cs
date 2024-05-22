@@ -14,11 +14,15 @@ namespace LibraryApi.Services
             _context = new LibraryDbContext();
         }
 
-        public List<Book> GetAllBooks()
+        public List<Book> GetAllBooks(string? title, string? author, int? year)
         {
             try
             {
-                return _context.Books.Include(b => b.Author).ToList();
+                var query = _context.Books.Include(b => b.Author).AsQueryable();
+                if (title != null) query = query.Where(b => b.Title == title);
+                if (author != null) query = query.Where(b => b.Author.Name == author);
+                if (year != null) query = query.Where(b => b.Year == year);
+                return query.ToList();
             }
             catch (Exception e)
             {
