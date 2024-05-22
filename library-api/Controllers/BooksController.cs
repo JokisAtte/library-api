@@ -33,9 +33,9 @@ namespace LibraryApi.Controllers
         [HttpPost]
         public IActionResult CreateBook([FromBody] Book book)
         {
-            Console.WriteLine(book.Title);
-            _service.AddBook(book);
-            return Ok();
+            int result = _service.AddBook(book);
+            if (result == -1) return new ObjectResult("Bad Request") { StatusCode = 400 };
+            return Ok(new { id = result });
         }
 
         // PUT: api/Books/{id}

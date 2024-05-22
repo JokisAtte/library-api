@@ -36,20 +36,38 @@ namespace LibraryApi.Services
             return _context.Books.Include(b => b.Author).FirstOrDefault(b => b.Id == id);
         }
 
-        public bool AddBook(Book book)
+        public int AddBook(Book newBook)
         {
-            var author = _context.Authors.FirstOrDefault(a => a.Name == book.Author.Name);
+            var existingBook = _context.Books.FirstOrDefault(existing => existing.Title == newBook.Title && existing.Year == newBook.Year && existing.Author.Name == newBook.Author.Name);
+            if (existingBook != null)
+            {
+                // Return a negative value to indicate an error
+                // TODO: Is there a better way to do this?
+                return -1;
+            }
+
+            var author = _context.Authors.FirstOrDefault(a => a.Name == newBook.Author.Name);
             if (author == null)
             {
-                _context.Authors.Add(book.Author);
+                _context.Authors.Add(newBook.Author);
             }
             else
             {
-                book.Author = author;
-                book.AuthorId = author.Id;
+                newBook.Author = author;
+                newBook.AuthorId = author.Id;
             }
-            _context.Books.Add(book);
-            return _context.SaveChanges() > 0;
+
+            try
+            {
+                _context.Books.Add(newBook);
+                _context.SaveChanges();
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
+
+            return newBook.Id;
         }
 
         public bool DeleteBook(int id)
