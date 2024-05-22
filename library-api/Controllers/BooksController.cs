@@ -13,12 +13,12 @@ namespace LibraryApi.Controllers
         {
             _service = service;
         }
-
+        //[FromQuery(Name = "title")] string? title, [FromQuery(Name = "Author")] string? author, [FromQuery(Name = "Year")] int? year
         // GET: api/Books
         [HttpGet]
-        public IActionResult GetBooks()
+        public IActionResult GetBooks([FromQuery(Name = "title")] string? title, [FromQuery(Name = "Author")] string? author, [FromQuery(Name = "Year")] int? year)
         {
-            return Ok(_service.GetAllBooks());
+            return Ok(_service.GetAllBooks(title, author, year));
         }
 
         // GET: api/Books/{id}
