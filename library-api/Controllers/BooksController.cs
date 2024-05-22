@@ -11,7 +11,7 @@ namespace LibraryApi.Controllers
 
         public BooksController(BooksService service)
         {
-            _service = new BooksService();
+            _service = service;
         }
 
         // GET: api/Books
@@ -25,13 +25,16 @@ namespace LibraryApi.Controllers
         [HttpGet("{id}")]
         public IActionResult GetBook(int id)
         {
-            return Ok();
+            Book book = _service.GetBookById(id);
+            return book == null ? NotFound() : Ok(book);
         }
 
         // POST: api/Books
         [HttpPost]
         public IActionResult CreateBook([FromBody] Book book)
         {
+            Console.WriteLine(book.Title);
+            _service.AddBook(book);
             return Ok();
         }
 

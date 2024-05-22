@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using LibraryApi.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace LibraryApi.Services
 {
@@ -17,7 +18,7 @@ namespace LibraryApi.Services
         {
             try
             {
-                return _context.Books.ToList();
+                return _context.Books.Include(b => b.Author).ToList();
             }
             catch (Exception e)
             {
@@ -28,25 +29,31 @@ namespace LibraryApi.Services
 
         public Book GetBookById(int id)
         {
-            throw new NotImplementedException();
+            return _context.Books.Include(b => b.Author).FirstOrDefault(b => b.Id == id);
         }
 
-        public void AddBook(Book book)
+        public bool AddBook(Book book)
         {
+            var author = _context.Authors.FirstOrDefault(a => a.Name == book.Author.Name);
+            if (author == null)
+            {
+                _context.Authors.Add(book.Author);
+            }
+            else
+            {
+                book.Author = author;
+                book.AuthorId = author.Id;
+            }
             _context.Books.Add(book);
-            _context.SaveChanges();
+            return _context.SaveChanges() > 0;
         }
 
-        public void UpdateBook(int id, Book updatedBook)
+        public bool DeleteBook(int id)
         {
-            throw new NotImplementedException();
-
+            var book = _context.Books.FirstOrDefault(b => b.Id == id);
+            if (book == null) return false;
+            _context.Books.Remove(book);
+            return _context.SaveChanges() > 0;
         }
-
-        public void DeleteBook(int id)
-        {
-            throw new NotImplementedException();
-        }
-
     }
 }
