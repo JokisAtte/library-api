@@ -41,9 +41,7 @@ namespace LibraryApi.Services
             var existingBook = _context.Books.FirstOrDefault(existing => existing.Title == newBook.Title && existing.Year == newBook.Year && existing.Author.Name == newBook.Author.Name);
             if (existingBook != null)
             {
-                // Return a negative value to indicate an error
-                // TODO: Is there a better way to do this?
-                return -1;
+                throw new Exception("Book already exists");
             }
 
             var author = _context.Authors.FirstOrDefault(a => a.Name == newBook.Author.Name);

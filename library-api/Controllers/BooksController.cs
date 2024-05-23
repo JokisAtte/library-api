@@ -33,8 +33,16 @@ namespace LibraryApi.Controllers
         [HttpPost]
         public IActionResult CreateBook([FromBody] Book book)
         {
-            int result = _service.AddBook(book);
-            if (result == -1) return new ObjectResult("Bad Request") { StatusCode = 400 };
+            int result;
+            try
+            {
+                result = _service.AddBook(book);
+            }
+            catch (Exception e)
+            {
+                return new ObjectResult(e.Message) { StatusCode = 400 };
+            }
+
             return Ok(new { id = result });
         }
 
