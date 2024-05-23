@@ -13,14 +13,13 @@ namespace LibraryApi.Services
             _context = new LibraryDbContext();
         }
 
-        //TODO: Add summaries
         /// <summary>
-        /// 
+        /// Return all books in database
         /// </summary>
         /// <param name="title"></param>
         /// <param name="author"></param>
         /// <param name="year"></param>
-        /// <returns></returns>
+        /// <returns>List of books</returns>
         public List<Book> GetAllBooks(string? title, string? author, int? year)
         {
             //TODO Poista try catch sit kun kontrolleris on error handling
@@ -39,12 +38,21 @@ namespace LibraryApi.Services
                 return null;
             }
         }
-
+        /// <summary>
+        /// Retrieves a book by its ID.
+        /// </summary>
+        /// <param name="id">The ID of the book.</param>
+        /// <returns>The book with the specified ID, or null if not found.</returns>
         public Book GetBookById(int id)
         {
             return _context.Books.Include(b => b.Author).FirstOrDefault(b => b.Id == id);
         }
 
+        /// <summary>
+        /// Adds a new book to the database.
+        /// </summary>
+        /// <param name="newBook">Book object to be added</param>
+        /// <returns>Id of the created book</returns>
         public int AddBook(Book newBook)
         {
             var existingBook = _context.Books.FirstOrDefault(existing => existing.Title == newBook.Title && existing.Year == newBook.Year && existing.Author.Name == newBook.Author.Name);
@@ -67,7 +75,11 @@ namespace LibraryApi.Services
             _context.SaveChanges();
             return newBook.Id;
         }
-
+        /// <summary>
+        /// Deletes a book in the database.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>True if success, false if failed</returns>
         public bool DeleteBook(int id)
         {
             var book = _context.Books.FirstOrDefault(b => b.Id == id);

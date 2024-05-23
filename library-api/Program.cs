@@ -12,6 +12,7 @@ builder.Services.AddControllers();
 //TODO: Toinen service pitäis olla interface
 builder.Services.AddScoped<BooksService, BooksService>();
 
+//TODO Korjaa oikea portti
 var app = builder.Build();
 
 app.MapGet("/health-check", () => "ok");

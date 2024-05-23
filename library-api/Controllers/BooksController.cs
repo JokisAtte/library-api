@@ -9,6 +9,11 @@ namespace LibraryApi.Controllers
     {
         private BooksService _service;
 
+        public class IdResponse
+        {
+            public int id { get; set; }
+        }
+
         // TODO: Lisää tähän globaali errorien catchaus
         // Lisää message erroriin joka lähtee asiakkaalle
 
@@ -17,24 +22,29 @@ namespace LibraryApi.Controllers
             _service = service;
         }
 
-        //TODO: Add summary (lyö kolme / merkkiä nii tulee automagic)
         /// <summary>
-        /// Get all books
+        /// Returns all books in database as an array
+        /// Supports filtering by any combination of book title, author and year
         /// </summary>
-        /// <param name="title"></param>
-        /// <param name="author"></param>
-        /// <param name="year"></param>
-        /// <returns></returns>
+        /// <param name="title">Title of the book</param>
+        /// <param name="author">Author of the book</param>
+        /// <param name="year">Release year</param>
+        /// <returns>Array of books</returns>
         //TODO: tutki kontrollerin atribuutteja, millä saa esim swaggeriin mitä se palauttaa
         [HttpGet]
+        [ProducesResponseType(typeof(Book[]), StatusCodes.Status200OK)]
         public IActionResult GetBooks([FromQuery] string? title, [FromQuery] string? author, [FromQuery] int? year)
         {
             //TODO: Add error handling
-            //TODO: Format data properly
+            //TODO: Format data according to the specification
             return Ok(_service.GetAllBooks(title, author, year));
         }
 
-        //TODO: lisää nää kaikkialle
+        /// <summary>
+        /// Returns a single book by ID
+        /// </summary>
+        /// <param name="id">Id of the book</param>
+        /// <returns>Sinlge book</returns>
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(Book), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -44,9 +54,16 @@ namespace LibraryApi.Controllers
             return book == null ? NotFound() : Ok(book);
         }
 
+        /// <summary>
+        /// Creates a new book in the database
+        /// </summary>
+        /// <param name="book">Book object to be added</param>
+        /// <returns>ID of the created book</returns>
         [HttpPost]
+        [ProducesResponseType(typeof(IdResponse), StatusCodes.Status200OK)]
         public IActionResult CreateBook([FromBody] Book book)
         {
+            //TODO Validoi input. Nyt hyväksyy ylimääräisiä kenttiä
             int result;
             try
             {
@@ -59,10 +76,17 @@ namespace LibraryApi.Controllers
                 return new ObjectResult(e.Message) { StatusCode = 400 };
             }
 
-            return Ok(new { id = result });
+            return Ok(new IdResponse { id = result });
         }
 
+        /// <summary>
+        /// Updates a book in the database
+        /// </summary>
+        /// <param name="id"> ID of the book to be deleted </param>
+        /// <returns>Status 204 if successful</returns>
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult DeleteBook(int id)
         {
             try
