@@ -6,7 +6,6 @@ namespace LibraryApi.Services
 {
     public class BooksService
     {
-        private List<Book> _books;
         private LibraryDbContext _context;
 
         public BooksService()
@@ -14,14 +13,24 @@ namespace LibraryApi.Services
             _context = new LibraryDbContext();
         }
 
+        //TODO: Add summaries
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="author"></param>
+        /// <param name="year"></param>
+        /// <returns></returns>
         public List<Book> GetAllBooks(string? title, string? author, int? year)
         {
+            //TODO Poista try catch sit kun kontrolleris on error handling
             try
             {
                 var query = _context.Books.Include(b => b.Author).AsQueryable();
                 if (title != null) query = query.Where(b => b.Title == title);
                 if (author != null) query = query.Where(b => b.Author.Name == author);
                 if (year != null) query = query.Where(b => b.Year == year);
+                //TODO: add async to all services
                 return query.ToList();
             }
             catch (Exception e)
@@ -54,17 +63,8 @@ namespace LibraryApi.Services
                 newBook.Author = author;
                 newBook.AuthorId = author.Id;
             }
-
-            try
-            {
-                _context.Books.Add(newBook);
-                _context.SaveChanges();
-            }
-            catch (Exception e)
-            {
-                throw e;
-            }
-
+            _context.Books.Add(newBook);
+            _context.SaveChanges();
             return newBook.Id;
         }
 

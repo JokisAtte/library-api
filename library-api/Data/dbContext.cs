@@ -21,6 +21,8 @@ namespace LibraryApi.Data
     }
 }
 
+//TODO Eriytä omiin tiedostoihin
+//TODO tee EF modelit ja lisää sinne taulujen nimet
 public class Book
 {
     public int Id { get; set; }

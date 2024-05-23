@@ -9,34 +9,51 @@ namespace LibraryApi.Controllers
     {
         private BooksService _service;
 
+        // TODO: Lisää tähän globaali errorien catchaus
+        // Lisää message erroriin joka lähtee asiakkaalle
+
         public BooksController(BooksService service)
         {
             _service = service;
         }
-        // GET: api/Books
+
+        //TODO: Add summary (lyö kolme / merkkiä nii tulee automagic)
+        /// <summary>
+        /// Get all books
+        /// </summary>
+        /// <param name="title"></param>
+        /// <param name="author"></param>
+        /// <param name="year"></param>
+        /// <returns></returns>
+        //TODO: tutki kontrollerin atribuutteja, millä saa esim swaggeriin mitä se palauttaa
         [HttpGet]
-        public IActionResult GetBooks([FromQuery(Name = "title")] string? title, [FromQuery(Name = "Author")] string? author, [FromQuery(Name = "Year")] int? year)
+        public IActionResult GetBooks([FromQuery] string? title, [FromQuery] string? author, [FromQuery] int? year)
         {
+            //TODO: Add error handling
+            //TODO: Format data properly
             return Ok(_service.GetAllBooks(title, author, year));
         }
 
-        // GET: api/Books/{id}
+        //TODO: lisää nää kaikkialle
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(Book), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetBook(int id)
         {
             Book book = _service.GetBookById(id);
             return book == null ? NotFound() : Ok(book);
         }
 
-        // POST: api/Books
         [HttpPost]
         public IActionResult CreateBook([FromBody] Book book)
         {
             int result;
             try
             {
+                //TODO: Add await to all
                 result = _service.AddBook(book);
             }
+            // TODO: Add more specific exceptions
             catch (Exception e)
             {
                 return new ObjectResult(e.Message) { StatusCode = 400 };
@@ -45,18 +62,19 @@ namespace LibraryApi.Controllers
             return Ok(new { id = result });
         }
 
-        // PUT: api/Books/{id}
-        [HttpPut("{id}")]
-        public IActionResult UpdateBook(int id, [FromBody] Book book)
-        {
-            return Ok();
-        }
-
         [HttpDelete("{id}")]
         public IActionResult DeleteBook(int id)
         {
-            // TODO: Implement DeleteBook
-            return Ok();
+            try
+            {
+                _service.DeleteBook(id);
+            }
+            catch (Exception e)
+            {
+                return new ObjectResult(e.Message) { StatusCode = 400 };
+            }
+
+            return NoContent();
         }
     }
 }

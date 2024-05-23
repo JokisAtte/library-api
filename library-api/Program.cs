@@ -8,6 +8,8 @@ builder.Services.AddDbContext<LibraryDbContext>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
+//TODO: Selvitä mitä tekee
+//TODO: Toinen service pitäis olla interface
 builder.Services.AddScoped<BooksService, BooksService>();
 
 var app = builder.Build();
@@ -15,11 +17,12 @@ var app = builder.Build();
 app.MapGet("/health-check", () => "ok");
 app.MapControllers();
 app.UseRouting();
-
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseHttpsRedirection();
 
 app.Run();
