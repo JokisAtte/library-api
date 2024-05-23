@@ -14,9 +14,6 @@ namespace LibraryApi.Controllers
             public int id { get; set; }
         }
 
-        // TODO: Lisää tähän globaali errorien catchaus
-        // Lisää message erroriin joka lähtee asiakkaalle
-
         public BooksController(BooksService service)
         {
             _service = service;
@@ -30,14 +27,20 @@ namespace LibraryApi.Controllers
         /// <param name="author">Author of the book</param>
         /// <param name="year">Release year</param>
         /// <returns>Array of books</returns>
-        //TODO: tutki kontrollerin atribuutteja, millä saa esim swaggeriin mitä se palauttaa
         [HttpGet]
         [ProducesResponseType(typeof(Book[]), StatusCodes.Status200OK)]
         public IActionResult GetBooks([FromQuery] string? title, [FromQuery] string? author, [FromQuery] int? year)
         {
-            //TODO: Add error handling
-            //TODO: Format data according to the specification
-            return Ok(_service.GetAllBooks(title, author, year));
+            //TODO: Format data according to the specification or remove author object all together
+            try
+            {
+                return Ok(_service.GetAllBooks(title, author, year));
+            }
+            catch (Exception e)
+            {
+                //TODO: tarkista status code
+                return new ObjectResult(e.Message) { StatusCode = 400 };
+            }
         }
 
         /// <summary>

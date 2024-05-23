@@ -38,6 +38,7 @@ namespace LibraryApi.Services
                 return null;
             }
         }
+
         /// <summary>
         /// Retrieves a book by its ID.
         /// </summary>
@@ -75,6 +76,7 @@ namespace LibraryApi.Services
             _context.SaveChanges();
             return newBook.Id;
         }
+
         /// <summary>
         /// Deletes a book in the database.
         /// </summary>
