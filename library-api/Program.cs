@@ -8,8 +8,6 @@ builder.Services.AddDbContext<LibraryDbContext>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
-//TODO: Selvitä mitä tekee
-//TODO: Toinen service pitäis olla interface
 builder.Services.AddScoped<IBooksService, BooksService>();
 
 //TODO Korjaa oikea portti
