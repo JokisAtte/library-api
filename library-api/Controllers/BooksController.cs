@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using LibraryApi.Services;
+using LibraryApi.Exceptions;
 
 namespace LibraryApi.Controllers
 {
@@ -29,17 +30,29 @@ namespace LibraryApi.Controllers
         /// <returns>Array of books</returns>
         [HttpGet]
         [ProducesResponseType(typeof(Book[]), StatusCodes.Status200OK)]
-        public IActionResult GetBooks([FromQuery] string? title, [FromQuery] string? author, [FromQuery] int? year)
+        public async Task<IActionResult> GetBooks([FromQuery] string? title, [FromQuery] string? author, [FromQuery] int? year)
         {
-            //TODO: Format data according to the specification or remove author object all together
+            var result = new List<object>();
             try
             {
-                return Ok(_service.GetAllBooks(title, author, year));
+                List<Book> books = await _service.GetAllBooks(title, author, year);
+                foreach (var book in books)
+                {
+                    result.Add(new
+                    {
+                        id = book.Id,
+                        title = book.Title,
+                        author = book.Author.Name,
+                        year = book.Year,
+                        publisher = book.Publisher,
+                        description = book.Description
+                    });
+                }
+                return Ok(result);
             }
             catch (Exception e)
             {
-                //TODO: tarkista status code
-                return new ObjectResult(e.Message) { StatusCode = 400 };
+                return new ObjectResult(e.Message) { StatusCode = 500 };
             }
         }
 
@@ -51,10 +64,21 @@ namespace LibraryApi.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(Book), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult GetBook(int id)
+        public async Task<IActionResult> GetBook(int id)
         {
-            Book book = _service.GetBookById(id);
-            return book == null ? NotFound() : Ok(book);
+            try
+            {
+                Book book = await _service.GetBookById(id);
+                return book == null ? NotFound() : Ok(book);
+            }
+            catch (ResourceNotFoundException e)
+            {
+                return new ObjectResult(e.Message) { StatusCode = e.StatusCode };
+            }
+            catch (Exception e)
+            {
+                return new ObjectResult(e.Message) { StatusCode = 500 };
+            }
         }
 
         /// <summary>
@@ -64,19 +88,22 @@ namespace LibraryApi.Controllers
         /// <returns>ID of the created book</returns>
         [HttpPost]
         [ProducesResponseType(typeof(IdResponse), StatusCodes.Status200OK)]
-        public IActionResult CreateBook([FromBody] Book book)
+        public async Task<IActionResult> CreateBook([FromBody] Book book)
         {
             //TODO Validoi input. Nyt hyväksyy ylimääräisiä kenttiä
             int result;
             try
             {
-                //TODO: Add await to all
-                result = _service.AddBook(book);
+                result = await _service.AddBook(book);
             }
             // TODO: Add more specific exceptions
+            catch (ResourceAlreadyExistsException e)
+            {
+                return new ObjectResult(e.Message) { StatusCode = e.StatusCode };
+            }
             catch (Exception e)
             {
-                return new ObjectResult(e.Message) { StatusCode = 400 };
+                return new ObjectResult(e.Message) { StatusCode = 500 };
             }
 
             return Ok(new IdResponse { id = result });
@@ -90,18 +117,18 @@ namespace LibraryApi.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult DeleteBook(int id)
+        public async Task<IActionResult> DeleteBook(int id)
         {
+            bool result;
             try
             {
-                _service.DeleteBook(id);
+                result = await _service.DeleteBook(id);
             }
             catch (Exception e)
             {
                 return new ObjectResult(e.Message) { StatusCode = 400 };
             }
-
-            return NoContent();
+            return result ? NoContent() : NotFound();
         }
     }
 }

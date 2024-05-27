@@ -10,7 +10,6 @@ namespace LibraryApi.Data
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlite("Data Source=books.db");
-            //TODO: Add logging here
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
