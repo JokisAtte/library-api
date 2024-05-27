@@ -99,7 +99,6 @@ namespace LibraryApi.Controllers
         [ProducesResponseType(typeof(IdResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> CreateBook([FromBody] Book book)
         {
-            //TODO Validoi input. Nyt hyväksyy ylimääräisiä kenttiä
             int result;
             try
             {
@@ -132,11 +131,15 @@ namespace LibraryApi.Controllers
             {
                 result = await _service.DeleteBook(id);
             }
+            catch (ResourceNotFoundException e)
+            {
+                return new ObjectResult(e.Message) { StatusCode = e.StatusCode };
+            }
             catch (Exception e)
             {
-                return new ObjectResult(e.Message) { StatusCode = 400 };
+                return new ObjectResult(e.Message) { StatusCode = 500 };
             }
-            return result ? NoContent() : NotFound();
+            return NoContent();
         }
     }
 }
