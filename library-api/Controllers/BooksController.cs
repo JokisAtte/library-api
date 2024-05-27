@@ -8,7 +8,7 @@ namespace LibraryApi.Controllers
     [Route("[controller]")]
     public class BooksController : ControllerBase
     {
-        private BooksService _service;
+        private IBooksService _service;
 
         public class IdResponse
         {
@@ -32,6 +32,15 @@ namespace LibraryApi.Controllers
         [ProducesResponseType(typeof(Book[]), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetBooks([FromQuery] string? title, [FromQuery] string? author, [FromQuery] int? year)
         {
+            var allowedParameters = new List<string> { "title", "year", "author" };
+            foreach (var parameter in Request.Query.Keys)
+            {
+                if (!allowedParameters.Contains(parameter.ToLower()))
+                {
+                    return BadRequest($"Invalid query parameter: {parameter}");
+                }
+            }
+
             var result = new List<object>();
             try
             {
@@ -96,7 +105,6 @@ namespace LibraryApi.Controllers
             {
                 result = await _service.AddBook(book);
             }
-            // TODO: Add more specific exceptions
             catch (ResourceAlreadyExistsException e)
             {
                 return new ObjectResult(e.Message) { StatusCode = e.StatusCode };

@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-
+using System.ComponentModel.DataAnnotations;
 namespace LibraryApi.Data
 {
     public class LibraryDbContext : DbContext
@@ -20,23 +20,25 @@ namespace LibraryApi.Data
     }
 }
 
-//TODO Eriytä omiin tiedostoihin
-//TODO tee EF modelit ja lisää sinne taulujen nimet
 public class Book
 {
     public int Id { get; set; }
+    [Required]
     public string Title { get; set; } = "";
+    [Required]
     public int Year { get; set; } = int.MinValue;
+    [MinLength(1)]
     public string? Publisher { get; set; }
     public string? Description { get; set; }
     public int AuthorId { get; set; }
-
+    [Required]
     public Author Author { get; set; }
 }
 
 public class Author
 {
     public int Id { get; set; }
+    [Required]
     public string Name { get; set; }
 
 }
