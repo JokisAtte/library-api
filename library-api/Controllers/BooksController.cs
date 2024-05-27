@@ -15,7 +15,7 @@ namespace LibraryApi.Controllers
             public int id { get; set; }
         }
 
-        public BooksController(BooksService service)
+        public BooksController(IBooksService service)
         {
             _service = service;
         }
