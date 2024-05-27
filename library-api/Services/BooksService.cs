@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace LibraryApi.Services
 {
-    public class BooksService
+    public class BooksService : IBooksService
     {
         private LibraryDbContext _context;
 
@@ -81,7 +81,7 @@ namespace LibraryApi.Services
         public async Task<bool> DeleteBook(int id)
         {
             var book = _context.Books.FirstOrDefault(b => b.Id == id);
-            if (book == null) return false;
+            if (book == null) throw new ResourceNotFoundException($"Book with id {id} not found", 404);
             _context.Books.Remove(book);
             return _context.SaveChanges() > 0;
         }

@@ -10,9 +10,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 //TODO: Selvitä mitä tekee
 //TODO: Toinen service pitäis olla interface
-builder.Services.AddScoped<BooksService, BooksService>();
+builder.Services.AddScoped<IBooksService, BooksService>();
 
 //TODO Korjaa oikea portti
+//TODO Korjaa warningit
 var app = builder.Build();
 
 app.MapGet("/health-check", () => "ok");
