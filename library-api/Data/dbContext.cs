@@ -32,13 +32,13 @@ public class Book
     public string? Description { get; set; }
     public int AuthorId { get; set; }
     [Required]
-    public Author Author { get; set; }
+    public Author Author { get; set; } = new Author { };
 }
 
 public class Author
 {
     public int Id { get; set; }
     [Required]
-    public string Name { get; set; }
+    public string Name { get; set; } = "";
 
 }

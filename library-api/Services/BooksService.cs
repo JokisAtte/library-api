@@ -27,7 +27,7 @@ namespace LibraryApi.Services
             if (title != null) query = query.Where(b => b.Title == title);
             if (author != null) query = query.Where(b => b.Author.Name == author);
             if (year != null) query = query.Where(b => b.Year == year);
-            return query.ToList();
+            return await query.ToListAsync();
         }
 
         /// <summary>
@@ -37,12 +37,12 @@ namespace LibraryApi.Services
         /// <returns>The book with the specified ID, or null if not found.</returns>
         public async Task<Book> GetBookById(int id)
         {
-            Book result = _context.Books.Include(b => b.Author).FirstOrDefault(b => b.Id == id);
+            Book? result = await _context.Books.Include(b => b.Author).FirstOrDefaultAsync(b => b.Id == id);
             if (result == null)
             {
                 throw new ResourceNotFoundException($"Book with id {id} not found ", 404);
             }
-            return _context.Books.Include(b => b.Author).FirstOrDefault(b => b.Id == id);
+            return result;
         }
 
         /// <summary>
@@ -52,7 +52,7 @@ namespace LibraryApi.Services
         /// <returns>Id of the created book</returns>
         public async Task<int> AddBook(Book newBook)
         {
-            var existingBook = _context.Books.FirstOrDefault(existing => existing.Title == newBook.Title && existing.Year == newBook.Year && existing.Author.Name == newBook.Author.Name);
+            var existingBook = await _context.Books.FirstOrDefaultAsync(existing => existing.Title == newBook.Title && existing.Year == newBook.Year && existing.Author.Name == newBook.Author.Name);
             if (existingBook != null)
             {
                 throw new ResourceAlreadyExistsException("Book already exists", 400);
@@ -80,7 +80,7 @@ namespace LibraryApi.Services
         /// <returns>True if success, false if failed</returns>
         public async Task<bool> DeleteBook(int id)
         {
-            var book = _context.Books.FirstOrDefault(b => b.Id == id);
+            var book = await _context.Books.FirstOrDefaultAsync(b => b.Id == id);
             if (book == null) throw new ResourceNotFoundException($"Book with id {id} not found", 404);
             _context.Books.Remove(book);
             return _context.SaveChanges() > 0;
